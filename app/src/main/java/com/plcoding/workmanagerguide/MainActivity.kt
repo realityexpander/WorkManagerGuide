@@ -47,7 +47,9 @@ class MainActivity : ComponentActivity() {
                     .observeAsState()
                     .value
                 val downloadInfo = remember(key1 = workInfos) {
-                    workInfos?.find { it.id == downloadRequest.id }
+                    workInfos?.find {
+                        it.id == downloadRequest.id
+                    }
                 }
                 val filterInfo = remember(key1 = workInfos) {
                     workInfos?.find { it.id == colorFilterRequest.id }
@@ -93,10 +95,19 @@ class MainActivity : ComponentActivity() {
                     when(downloadInfo?.state) {
                         WorkInfo.State.RUNNING -> Text("Downloading...")
                         WorkInfo.State.SUCCEEDED -> Text("Download succeeded")
-                        WorkInfo.State.FAILED -> Text("Download failed")
+                        WorkInfo.State.FAILED -> {
+                            Text("Download failed")
+                            downloadInfo.outputData.getString(WorkerKeys.ERROR_MSG)?.let {
+                                Text(
+                                    text = it,
+                                    modifier = Modifier.padding(start = 8.dp, end = 8.dp)
+                                )
+                            }
+                        }
                         WorkInfo.State.CANCELLED -> Text("Download cancelled")
                         WorkInfo.State.ENQUEUED -> Text("Download enqueued")
                         WorkInfo.State.BLOCKED -> Text("Download blocked")
+                        else -> Text("Download not started")
                     }
                     Spacer(modifier = Modifier.height(8.dp))
                     when(filterInfo?.state) {

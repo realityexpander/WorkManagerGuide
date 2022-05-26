@@ -32,6 +32,7 @@ class DownloadWorker(
                 outputStream.use { stream ->
                     try {
                         stream.write(body.bytes())
+                        throw IOException("Error downloading image")
                     } catch(e: IOException) {
                         return@withContext Result.failure(
                             workDataOf(
@@ -53,7 +54,7 @@ class DownloadWorker(
             }
             return Result.failure(
                 workDataOf(
-                    WorkerKeys.ERROR_MSG to "Network error"
+                    WorkerKeys.ERROR_MSG to "Network error: ${response.code()}"
                 )
             )
         }
@@ -67,7 +68,7 @@ class DownloadWorker(
             ForegroundInfo(
                 Random.nextInt(),
                 NotificationCompat.Builder(context, "download_channel")
-                    .setSmallIcon(R.drawable.ic_launcher_background)
+                    .setSmallIcon(android.R.drawable.btn_star)
                     .setContentText("Downloading...")
                     .setContentTitle("Download in progress")
                     .build()
