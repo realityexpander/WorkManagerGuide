@@ -113,7 +113,15 @@ class MainActivity : ComponentActivity() {
                     when(filterInfo?.state) {
                         WorkInfo.State.RUNNING -> Text("Applying filter...")
                         WorkInfo.State.SUCCEEDED -> Text("Filter succeeded")
-                        WorkInfo.State.FAILED -> Text("Filter failed")
+                        WorkInfo.State.FAILED -> {
+                            Text("Filter failed")
+                            filterInfo.outputData.getString(WorkerKeys.ERROR_MSG)?.let {
+                                Text(
+                                    text = it,
+                                    modifier = Modifier.padding(start = 8.dp, end = 8.dp)
+                                )
+                            }
+                        }
                         WorkInfo.State.CANCELLED -> Text("Filter cancelled")
                         WorkInfo.State.ENQUEUED -> Text("Filter enqueued")
                         WorkInfo.State.BLOCKED -> Text("Filter blocked")

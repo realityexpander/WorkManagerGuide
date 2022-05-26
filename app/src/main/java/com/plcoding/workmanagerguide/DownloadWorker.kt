@@ -23,7 +23,7 @@ class DownloadWorker(
 
     override suspend fun doWork(): Result {
         startForegroundService()
-        delay(5000L)
+        delay(2000L)
         val response = FileApi.instance.downloadImage()
         response.body()?.let { body ->
             return withContext(Dispatchers.IO) {
