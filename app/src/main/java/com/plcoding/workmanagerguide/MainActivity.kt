@@ -52,7 +52,9 @@ class MainActivity : ComponentActivity() {
                     }
                 }
                 val filterInfo = remember(key1 = workInfos) {
-                    workInfos?.find { it.id == colorFilterRequest.id }
+                    workInfos?.find {
+                        it.id == colorFilterRequest.id
+                    }
                 }
                 val imageUri by derivedStateOf {
                     val downloadUri = downloadInfo?.outputData?.getString(WorkerKeys.IMAGE_URI)
@@ -93,7 +95,19 @@ class MainActivity : ComponentActivity() {
                     }
                     Spacer(modifier = Modifier.height(8.dp))
                     when(downloadInfo?.state) {
-                        WorkInfo.State.RUNNING -> Text("Downloading...")
+                        WorkInfo.State.RUNNING -> {
+                            Text("Downloading...")
+                            // show cancellation button
+                            Button(
+                                onClick = {
+                                    workManager
+                                        .cancelUniqueWork("download")
+                                },
+                                enabled = downloadInfo.state == WorkInfo.State.RUNNING
+                            ) {
+                                Text(text = "Cancel")
+                            }
+                        }
                         WorkInfo.State.SUCCEEDED -> Text("Download succeeded")
                         WorkInfo.State.FAILED -> {
                             Text("Download failed")

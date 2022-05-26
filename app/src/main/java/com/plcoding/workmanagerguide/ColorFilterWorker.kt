@@ -20,11 +20,11 @@ class ColorFilterWorker(
 ): CoroutineWorker(context, workerParams) {
 
     override suspend fun doWork(): Result {
-        var imageFile = workerParams.inputData.getString(WorkerKeys.IMAGE_URI)
+        val imageFile = workerParams.inputData.getString(WorkerKeys.IMAGE_URI)
             ?.toUri()
             ?.toFile()
         delay(2000L)
-        imageFile?.let { file ->
+        return imageFile?.let { file ->
             try {
                 val bmp = BitmapFactory.decodeFile(file.absolutePath)
                 val resultBmp = bmp.copy(bmp.config, true)
@@ -55,13 +55,13 @@ class ColorFilterWorker(
                     )
                 }
             } catch (e: Exception) {
-                return Result.failure(
+                Result.failure(
                     workDataOf(
                         WorkerKeys.ERROR_MSG to e.message
                     )
                 )
             }
-        } ?: return Result.failure(
+        } ?: Result.failure(
             workDataOf(
                 WorkerKeys.ERROR_MSG to "Image file not found"
             )
