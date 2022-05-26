@@ -32,7 +32,6 @@ class DownloadWorker(
                 outputStream.use { stream ->
                     try {
                         stream.write(body.bytes())
-                        throw IOException("Error downloading image")
                     } catch(e: IOException) {
                         return@withContext Result.failure(
                             workDataOf(
