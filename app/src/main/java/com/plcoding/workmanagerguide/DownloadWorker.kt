@@ -34,6 +34,7 @@ class DownloadWorker(
                         stream.write(body.bytes())
                     } catch(e: IOException) {
                         return@withContext Result.failure(
+                            // Corresponds to downloadInfo.outputData.putString(WorkerKeys.ERROR_MSG, e.message)
                             workDataOf(
                                 WorkerKeys.ERROR_MSG to e.localizedMessage
                             )
